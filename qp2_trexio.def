@@ -1,0 +1,50 @@
+Bootstrap: localimage 
+From: ./qp2_pure.sif
+
+
+%files
+    trexio_plugin_install.sh /
+
+# actions when container is built after the base OS is installed
+# INSTALL NEW APPLICATIONS HERE
+%post
+    echo "INSTALL TREXIO PLUGIN FOR QP"
+    chmod +x /qp2/quantum_package.rc
+    #./trexio_plugin_install.sh
+
+# actions to run at the end of container build process
+# to build a container without running %test section execute:
+#     sudo singularity build --notest my_container.sif my_container.def
+# to run only test from the pre-built container .sif file execute:
+#     singularity test my_container.sif
+# RUN CUSTOM TESTS HERE
+# DOES NOT WORK !
+#%test        
+#    . /qp2/quantum_package.rc  -> this line does not work, the file cannot be found 
+#    cd qp2/tests/input
+#    qp create_ezfio -b 6-31g hcn.xyz
+#    qp set_file hcn.ezfio
+#    qp run scf
+#    qp run export_trexio
+
+# actions when container is executed
+%runscript
+    echo "Container was created $NOW"
+    echo "TREXIO is installed in $TREXIO_LIB"
+    echo "QP is installed in $QP_ROOT"
+    echo "Arguments received: $*"
+    exec "$@"    
+#exec /bin/bash --rcfile /qp2/quantum_package.rc && qpsh "$@"
+
+
+# custom metadata (explore with `singularity inspect my_container.sif`)
+%labels
+    Label QP with TREXIO plugin
+    Author q-posev
+    Version v0.1.0_alpha
+
+
+# help string (explore with `singularity run-help my_container.sif`)
+%help
+    This is a container with Quantum Package, TREXIO 2.1.0 and QP plugin for TREXIO.
+    It can be used to run QP calculations and export data into TREXIO files.

@@ -1,0 +1,68 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+#Bootstrap: library
+#From: ubuntu:20.04
+#Fingerprints: 1137e72e6816bfc06d9caa0d15f3f4f4f14b03b2
+
+
+%files
+    qp2_install.sh ./
+
+# actions when container is built after the base OS is installed
+# INSTALL NEW APPLICATIONS HERE
+%post
+    apt update 
+    ln -snf /usr/share/zoneinfo/Europe/Paris /etc/localtime
+    apt install -y pkg-config 
+    apt install -y git 
+    apt install -y musl musl-dev 
+    apt install -y wget 
+    apt install -y rsync
+    apt install -y unzip
+    apt install -y curl 
+    apt install -y gfortran
+    apt install -y g++ 
+    apt install -y python3 
+    ln -s /usr/bin/python3 /usr/bin/python
+    apt install -y python3-pip 
+    apt install -y vim 
+    apt install -y libopenblas-dev 
+    apt install -y libhdf5-dev 
+    apt install -y make 
+    apt install -y m4  
+    apt install -y mlocate
+    echo "QP INSTALLATION"
+    ./qp2_install.sh
+    echo "TREXIO INSTALLATION"
+    export QP_ROOT_DIR=/qp2/
+    export TREXIO_VERSION="2.1.0"
+    wget https://github.com/TREX-CoE/trexio/releases/download/v$TREXIO_VERSION/trexio-$TREXIO_VERSION.tar.gz
+    gzip -cd trexio-$TREXIO_VERSION.tar.gz | tar xvf -
+    cd trexio-$TREXIO_VERSION
+    ./configure --prefix=$QP_ROOT_DIR
+    make
+    make install
+
+
+# actions when container is executed
+%runscript
+    echo ". /qp2/quantum_package.rc" >> $SINGULARITY_ENVIRONMENT
+    echo "Container was created $NOW"
+    echo "QP is installed in $QP_ROOT"
+    echo "Arguments received: $*"
+    exec echo "$@"
+
+
+# custom metadata (explore with `singularity inspect my_container.sif`)
+%labels
+    Label Quantum Package 2 container
+    Author q-posev
+    Version v0.1.0_alpha
+
+
+# help string (explore with `singularity run-help my_container.sif`)
+%help
+    This is a container with Quantum Package 2 installation
+    containing the TREXIO library version 2.1.0.
+    
