@@ -5,36 +5,23 @@ From: ./qp2_pure.sif
 %files
     trexio_plugin_install.sh /
 
+
 # actions when container is built after the base OS is installed
 # INSTALL NEW APPLICATIONS HERE
 %post
     echo "INSTALL TREXIO PLUGIN FOR QP"
-    chmod +x /qp2/quantum_package.rc
-    #./trexio_plugin_install.sh
+    ./trexio_plugin_install.sh
 
-# actions to run at the end of container build process
-# to build a container without running %test section execute:
-#     sudo singularity build --notest my_container.sif my_container.def
-# to run only test from the pre-built container .sif file execute:
-#     singularity test my_container.sif
-# RUN CUSTOM TESTS HERE
-# DOES NOT WORK !
-#%test        
-#    . /qp2/quantum_package.rc  -> this line does not work, the file cannot be found 
-#    cd qp2/tests/input
-#    qp create_ezfio -b 6-31g hcn.xyz
-#    qp set_file hcn.ezfio
-#    qp run scf
-#    qp run export_trexio
+# container-wide environment variables
+%environment 
+    export QP_ROOT=/qp2/
 
 # actions when container is executed
 %runscript
     echo "Container was created $NOW"
-    echo "TREXIO is installed in $TREXIO_LIB"
     echo "QP is installed in $QP_ROOT"
     echo "Arguments received: $*"
-    exec "$@"    
-#exec /bin/bash --rcfile /qp2/quantum_package.rc && qpsh "$@"
+    exec $QP_ROOT/bin/qpsh "$@" 
 
 
 # custom metadata (explore with `singularity inspect my_container.sif`)

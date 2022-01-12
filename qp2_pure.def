@@ -12,26 +12,26 @@ From: ubuntu:20.04
 # actions when container is built after the base OS is installed
 # INSTALL NEW APPLICATIONS HERE
 %post
-    apt update 
     ln -snf /usr/share/zoneinfo/Europe/Paris /etc/localtime
-    apt install -y pkg-config 
-    apt install -y git 
+    apt update
+    apt install -y pkg-config 	  
+    apt install -y git 		 
     apt install -y musl musl-dev 
-    apt install -y wget 
-    apt install -y rsync
-    apt install -y unzip
-    apt install -y curl 
-    apt install -y gfortran
-    apt install -y g++ 
-    apt install -y python3 
-    ln -s /usr/bin/python3 /usr/bin/python
-    apt install -y python3-pip 
-    apt install -y vim 
-    apt install -y libopenblas-dev 
-    apt install -y libhdf5-dev 
-    apt install -y make 
-    apt install -y m4  
+    apt install -y wget 	 
+    apt install -y rsync 	 
+    apt install -y unzip 	 
+    apt install -y curl  	 
+    apt install -y gfortran      
+    apt install -y g++           
+    apt install -y python3 	 
+    apt install -y python3-pip 	 
+    apt install -y vim 		 
+    apt install -y libopenblas-dev  
+    apt install -y libhdf5-dev   
+    apt install -y make          
+    apt install -y m4            
     apt install -y mlocate
+    ln -s /usr/bin/python3 /usr/bin/python
     echo "QP INSTALLATION"
     ./qp2_install.sh
     echo "TREXIO INSTALLATION"
@@ -45,13 +45,17 @@ From: ubuntu:20.04
     make install
 
 
+# container-wide environment variables
+%environment
+    export QP_ROOT=/qp2/
+
+
 # actions when container is executed
 %runscript
-    echo ". /qp2/quantum_package.rc" >> $SINGULARITY_ENVIRONMENT
     echo "Container was created $NOW"
     echo "QP is installed in $QP_ROOT"
     echo "Arguments received: $*"
-    exec echo "$@"
+    exec $QP_ROOT/bin/qpsh "$@"
 
 
 # custom metadata (explore with `singularity inspect my_container.sif`)
