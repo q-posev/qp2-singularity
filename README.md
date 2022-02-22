@@ -6,7 +6,7 @@
 
 ## Build qp2_pure.sif container
 
-The `qp2_pure.def` file contains isntructions to build a Singularity image from the Ubuntu base 
+The `qp2_pure.def` file contains instructions to build a Singularity image from the Ubuntu base 
 with development branch of Quantum Package and with TREXIO library (v.2.1.0) installed in it. 
 
 To build the container, run:
@@ -49,5 +49,5 @@ For example,
 
 `singularity run --no-home --cleanenv qp2_trexio.sif <qp2_commands_script>`
 
-**Note:** if the `<qp2_commands_script>` file is in a directory under `$HOME` than it will not be visible when using `--no-home` option.
+**Note:** if the `<qp2_commands_script>` file is in a directory under `$HOME` then it will not be accessible when `--no-home` option is used.
 
