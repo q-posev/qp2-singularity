@@ -1,0 +1,15 @@
+#!/bin/bash
+
+set -e
+set -x
+
+git clone https://github.com/TREX-CoE/trexio.git
+
+cd trexio
+
+./autogen.sh
+./configure --prefix=${QP_ROOT}
+make
+make install
+
+cd ..
