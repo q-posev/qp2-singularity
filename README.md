@@ -82,4 +82,3 @@ For example,
 
 **Note:** if the `<commands.sh>` script is in a directory under 
 `$HOME` than it will not be visible when `--no-home` option is used.
-
